@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  RH
+  LIDER
+  COLABORADOR
+}
+
+enum SurveyType {
+  CLIMA
+  EVAL_360
+}
+
+enum SurveyStatus {
+  BORRADOR
+  ACTIVA
+  CERRADA
+}
+
+enum Dimension {
+  LIDERAZGO
+  COMUNICACION
+  RECONOCIMIENTO
+  CARGA_TRABAJO
+  DESARROLLO
+  CONDICIONES
+  PERMANENCIA
+}
+
+enum QuestionType {
+  LIKERT_5
+  ABIERTA
+}
+
+enum Relation {
+  SUPERVISOR
+  PAR
+  AUTO
+}
+
+enum TenureBand {
+  MENOS_6M
+  DE_6M_A_1A
+  DE_1A_A_3A
+  MAS_3A
+}
+
+enum AlertLevel {
+  MEDIO
+  ALTO
+  CRITICO
+}
+
+enum AlertStatus {
+  NUEVA
+  EN_SEGUIMIENTO
+  ATENDIDA
+  DESCARTADA
+}
+
+model Area {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  users           User[]
+  turnoverRecords TurnoverRecord[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role
+  areaId       String
+  area         Area     @relation(fields: [areaId], references: [id])
+  supervisorId String?
+  supervisor   User?    @relation("Equipo", fields: [supervisorId], references: [id])
+  reports      User[]   @relation("Equipo")
+  hireDate     DateTime
+  active       Boolean  @default(true)
+}
+
+model Survey {
+  id           String       @id @default(cuid())
+  title        String
+  type         SurveyType
+  status       SurveyStatus @default(BORRADOR)
+  opensAt      DateTime?
+  closesAt     DateTime?
+  minGroupSize Int          @default(5)
+  questions    Question[]
+  invitations  Invitation[]
+  responses    Response[]
+  alerts       Alert[]
+}
+
+model Question {
+  id        String       @id @default(cuid())
+  surveyId  String
+  survey    Survey       @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  dimension Dimension
+  text      String
+  type      QuestionType @default(LIKERT_5)
+  relation  Relation?
+  order     Int
+  answers   Answer[]
+}
+
+// Quién debe responder. Sabe si ya respondió, pero NO guarda qué respondió.
+model Invitation {
+  id              String    @id @default(cuid())
+  surveyId        String
+  survey          Survey    @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  userId          String
+  evaluatedUserId String?
+  relation        Relation?
+  usedAt          DateTime?
+  // Índices únicos parciales en la migración SQL.
+}
+
+// Respuesta anónima. NO tiene userId ni invitationId. Es intencional.
+model Response {
+  id              String     @id @default(uuid()) // aleatorio: un cuid ordenado en el tiempo permitiría ligarlo a Invitation.usedAt
+  surveyId        String
+  survey          Survey     @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  areaId          String
+  tenureBand      TenureBand
+  evaluatedUserId String?
+  relation        Relation?
+  submittedOn     DateTime   @db.Date
+  answers         Answer[]
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  responseId String
+  response   Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  value      Int?
+  text       String?
+}
+
+model TurnoverRecord {
+  id             String   @id @default(cuid())
+  areaId         String
+  area           Area     @relation(fields: [areaId], references: [id])
+  month          DateTime @db.Date
+  headcountStart Int
+  exits          Int
+  voluntaryExits Int
+}
+
+model Alert {
+  id        String        @id @default(cuid())
+  surveyId  String
+  survey    Survey        @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  areaId    String
+  level     AlertLevel
+  riskScore Float
+  drivers   Json
+  status    AlertStatus   @default(NUEVA)
+  createdAt DateTime      @default(now())
+  closedAt  DateTime?
+  actions   AlertAction[]
+
+  @@unique([surveyId, areaId])
+}
+
+model AlertAction {
+  id          String    @id @default(cuid())
+  alertId     String
+  alert       Alert     @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  createdById String
+  description String
+  dueDate     DateTime?
+  doneAt      DateTime?
+}
+
+model RiskConfig {
+  id      Int  @id @default(1)
+  weights Json
+  levels  Json
+}
