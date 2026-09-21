@@ -35,13 +35,13 @@ authRouter.post('/login', loginLimiter, ah(async (req, res) => {
     throw new AppError(401, 'CREDENCIALES_INVALIDAS', 'El correo o la contraseña no coinciden. Revisa que estén bien escritos e inténtalo de nuevo.');
   }
   res.cookie(COOKIE_NAME, signToken(user.id), {
-    httpOnly: true, sameSite: 'lax', secure: env.isProd, maxAge: 8 * 60 * 60 * 1000,
+    httpOnly: true, sameSite: env.isProd ? 'none' : 'lax', secure: env.isProd, maxAge: 8 * 60 * 60 * 1000,
   });
   res.json({ user: await publicUser(user.id) });
 }));
 
 authRouter.post('/logout', (_req, res) => {
-  res.clearCookie(COOKIE_NAME);
+  res.clearCookie(COOKIE_NAME, { httpOnly: true, sameSite: env.isProd ? 'none' : 'lax', secure: env.isProd });
   res.json({ ok: true });
 });
 

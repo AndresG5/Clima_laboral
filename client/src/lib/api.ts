@@ -4,10 +4,13 @@ export class ApiError extends Error {
   }
 }
 
+// En producción el frontend (Cloudflare) y el backend (Render) viven en dominios distintos.
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
+
 async function request<T>(method: string, url: string, body?: unknown): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`/api${url}`, {
+    res = await fetch(`${API_BASE}/api${url}`, {
       method,
       credentials: 'include',
       headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,
