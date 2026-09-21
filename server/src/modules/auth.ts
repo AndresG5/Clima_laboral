@@ -34,10 +34,13 @@ authRouter.post('/login', loginLimiter, ah(async (req, res) => {
   if (!user || !ok) {
     throw new AppError(401, 'CREDENCIALES_INVALIDAS', 'El correo o la contraseña no coinciden. Revisa que estén bien escritos e inténtalo de nuevo.');
   }
-  res.cookie(COOKIE_NAME, signToken(user.id), {
+  const token = signToken(user.id);
+  res.cookie(COOKIE_NAME, token, {
     httpOnly: true, sameSite: env.isProd ? 'none' : 'lax', secure: env.isProd, maxAge: 8 * 60 * 60 * 1000,
   });
-  res.json({ user: await publicUser(user.id) });
+  // También se manda en el cuerpo: el cliente lo usa como Authorization: Bearer en producción,
+  // donde el navegador bloquea la cookie por ser de un dominio distinto al del frontend.
+  res.json({ user: await publicUser(user.id), token });
 }));
 
 authRouter.post('/logout', (_req, res) => {

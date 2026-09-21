@@ -20,9 +20,17 @@ export function signToken(userId: string): string {
   return jwt.sign({ sub: userId }, env.jwtSecret, { expiresIn: '8h' });
 }
 
+/**
+ * La cookie sirve para desarrollo local (mismo origen). En producción, cuando el frontend
+ * (Cloudflare) y la API (Render) viven en dominios distintos, los navegadores bloquean la
+ * cookie entre sitios como "cookie de terceros" aunque tenga SameSite=None. Por eso el
+ * cliente también manda el token en el header Authorization, que no sufre ese bloqueo.
+ */
 export async function requireAuth(req: Request, _res: Response, next: NextFunction): Promise<void> {
   try {
-    const token = req.cookies?.[COOKIE_NAME] as string | undefined;
+    const header = req.headers.authorization;
+    const bearer = header?.startsWith('Bearer ') ? header.slice(7) : undefined;
+    const token = bearer ?? (req.cookies?.[COOKIE_NAME] as string | undefined);
     if (!token) throw new AppError(401, 'SIN_SESION', 'Tu sesión no está iniciada. Entra con tu correo y contraseña.');
     let sub: string;
     try {

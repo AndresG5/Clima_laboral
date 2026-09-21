@@ -7,13 +7,22 @@ export class ApiError extends Error {
 // En producción el frontend (Cloudflare) y el backend (Render) viven en dominios distintos.
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
+const TOKEN_KEY = 'clima_token';
+export const getToken = (): string | null => localStorage.getItem(TOKEN_KEY);
+export const setToken = (token: string): void => localStorage.setItem(TOKEN_KEY, token);
+export const clearToken = (): void => localStorage.removeItem(TOKEN_KEY);
+
 async function request<T>(method: string, url: string, body?: unknown): Promise<T> {
   let res: Response;
+  const token = getToken();
   try {
     res = await fetch(`${API_BASE}/api${url}`, {
       method,
       credentials: 'include',
-      headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,
+      headers: {
+        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch {
@@ -21,6 +30,7 @@ async function request<T>(method: string, url: string, body?: unknown): Promise<
   }
   const data = res.status === 204 ? null : await res.json().catch(() => null);
   if (!res.ok) {
+    if (res.status === 401 && token) clearToken();
     const e = (data as { error?: { code: string; message: string } } | null)?.error;
     throw new ApiError(res.status, e?.code ?? 'ERROR', e?.message ?? 'Algo salió mal. Inténtalo de nuevo en un momento.');
   }

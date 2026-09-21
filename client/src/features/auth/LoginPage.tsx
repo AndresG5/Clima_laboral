@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
-import { api } from '../../lib/api';
+import { api, setToken } from '../../lib/api';
 import type { Me } from '../../lib/types';
 import { Button } from '../../components/Button';
 import { ErrorNote, Field, Input, Loading } from '../../components/ui';
@@ -24,8 +24,9 @@ export function LoginPage() {
   const [error, setError] = useState<unknown>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<Form>({ resolver: zodResolver(schema) });
   const login = useMutation({
-    mutationFn: (v: Form) => api.post<{ user: Me }>('/auth/login', v),
-    onSuccess: ({ user }) => {
+    mutationFn: (v: Form) => api.post<{ user: Me; token: string }>('/auth/login', v),
+    onSuccess: ({ user, token }) => {
+      setToken(token);
       qc.setQueryData(['me'], user);
       nav(homeFor(user.role), { replace: true });
     },

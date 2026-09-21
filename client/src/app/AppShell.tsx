@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Bell, ClipboardList, FileText, Gauge, LayoutGrid, LogOut, Settings, UserRound, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { api } from '../lib/api';
+import { api, clearToken } from '../lib/api';
 import { ROLE_LABELS } from '../lib/constants';
 import type { Me } from '../lib/types';
 import { Button } from '../components/Button';
@@ -34,7 +34,7 @@ export function AppShell({ me }: { me: Me }) {
   const nav = useNavigate();
   const logout = useMutation({
     mutationFn: () => api.post('/auth/logout'),
-    onSuccess: () => { qc.clear(); nav('/login', { replace: true }); },
+    onSuccess: () => { clearToken(); qc.clear(); nav('/login', { replace: true }); },
   });
   return (
     <div className="flex min-h-screen flex-col">
