@@ -101,7 +101,7 @@ export function EncuestaFormPage() {
                 return (
                   <fieldset key={q.id} ref={isFirst ? firstMissing : undefined} className="min-w-0">
                     <legend className="mb-2 font-semibold">{q.text}</legend>
-                    <div className="grid gap-2 sm:grid-cols-5">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
                       {LIKERT_LABELS.map((label, i) => {
                         const v = i + 1;
                         const checked = values[q.id] === v;

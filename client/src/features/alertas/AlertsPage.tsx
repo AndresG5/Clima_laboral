@@ -72,7 +72,7 @@ function AlertDetail({ id, mode }: { id: string; mode: 'rh' | 'lider' }) {
           <div className="mt-4 flex flex-wrap items-end gap-3 border-t border-borde-suave pt-4">
             <Field label="Estado de la alerta">
               {(fid) => (
-                <Select id={fid} value={status} onChange={(e) => setStatus(e.target.value as AlertStatus)} className="!w-auto min-w-48">
+                <Select id={fid} value={status} onChange={(e) => setStatus(e.target.value as AlertStatus)} className="w-full min-w-0 sm:!w-auto sm:min-w-48">
                   {(Object.keys(STATUS_LABELS) as AlertStatus[]).map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                 </Select>
               )}
@@ -137,7 +137,7 @@ export function AlertsPage({ mode }: { mode: 'rh' | 'lider' }) {
       <PageHeader title={mode === 'rh' ? 'Alertas de riesgo' : 'Alertas de mi área'}>
         {mode === 'rh' ? 'Áreas con riesgo alto o crítico de rotación. Abre una alerta para ver qué atender y dar seguimiento.' : 'Registra las acciones que vas a tomar y su fecha compromiso.'}
       </PageHeader>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
         <Panel title="Bandeja">
           <div className="mb-4 grid grid-cols-2 gap-3">
             <Field label="Nivel">

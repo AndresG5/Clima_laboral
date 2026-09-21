@@ -53,7 +53,7 @@ function CreateSurvey({ onDone }: { onDone: () => void }) {
   return (
     <Panel title="Crear encuesta">
       <form noValidate onSubmit={handleSubmit((v) => create.mutate(v))} className="flex flex-col gap-5">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Título" error={errors.title?.message}>{(id, d) => <Input id={id} aria-describedby={d} {...register('title')} />}</Field>
           <Field label="Tipo">{(id) => <Select id={id} {...register('type')}><option value="CLIMA">Clima laboral</option><option value="EVAL_360">Evaluación 360</option></Select>}</Field>
           <Field label="Apertura" hint="Opcional">{(id) => <Input id={id} type="date" {...register('opensAt')} />}</Field>
@@ -69,7 +69,7 @@ function CreateSurvey({ onDone }: { onDone: () => void }) {
             <Button type="button" variant="secondary" onClick={() => setValue('questions', sampleQuestions(), { shouldValidate: true })} icon={<Sparkles className="h-4 w-4" aria-hidden="true" />}>Cargar preguntas de ejemplo</Button>
           </legend>
           {fields.map((f, i) => (
-            <div key={f.id} className="grid gap-3 rounded-md border border-borde-suave p-3 md:grid-cols-[180px_1fr_150px_auto] md:items-start">
+            <div key={f.id} className="grid grid-cols-1 gap-3 rounded-md border border-borde-suave p-3 md:grid-cols-[180px_1fr_150px_auto] md:items-start">
               <Field label="Dimensión">{(id) => <Select id={id} {...register(`questions.${i}.dimension`)}>{DIMENSIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</Select>}</Field>
               <Field label="Pregunta" error={errors.questions?.[i]?.text?.message}>{(id, d) => <Input id={id} aria-describedby={d} {...register(`questions.${i}.text`)} />}</Field>
               <Field label="Respuesta">{(id) => <Select id={id} {...register(`questions.${i}.type`)}><option value="LIKERT_5">Escala 1 a 5</option><option value="ABIERTA">Comentario</option></Select>}</Field>

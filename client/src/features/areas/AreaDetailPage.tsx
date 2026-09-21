@@ -55,7 +55,7 @@ export function AreaDetailPage({ own = false }: { own?: boolean }) {
     <>
       <PageHeader title={title} actions={select}>{d.survey.title}. {back}</PageHeader>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Panel title="Riesgo de rotación" className="lg:col-span-1">
           {d.risk ? (
             <div className="flex flex-col gap-4">
@@ -79,7 +79,7 @@ export function AreaDetailPage({ own = false }: { own?: boolean }) {
         </Panel>
 
         <Panel title="Resumen" className="lg:col-span-2">
-          <dl className="grid gap-6 sm:grid-cols-3">
+          <dl className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <Stat label="Respuestas" value={d.responses} note="Personas del área que respondieron" />
             <Stat label="Índice de clima" value={fmtPct(d.globalFavorable)} note="Respuestas favorables (4 o 5)" />
             <Stat label="Umbral de anonimato" value={d.survey.minGroupSize} note="Respuestas mínimas por corte" />

@@ -9,7 +9,7 @@ const BAR_CLS: Record<string, string> = {
 export function RiskRanking({ areas }: { areas: Overview['areas'] }) {
   const ranked = [...areas].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   return (
-    <ol className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <ol className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {ranked.map((a) => (
         <li key={a.areaId} className="rounded-md border border-borde-suave p-3">
           <div className="flex flex-wrap items-center justify-between gap-2">

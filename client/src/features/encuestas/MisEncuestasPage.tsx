@@ -16,7 +16,7 @@ export function MisEncuestasPage() {
   return (
     <>
       <PageHeader title="Mis encuestas">Tus respuestas son anónimas. Aquí solo se muestra si ya respondiste, nunca lo que respondiste.</PageHeader>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Panel title="Pendientes">
           {pending.length === 0 ? (
             <EmptyState title="No tienes encuestas pendientes">Cuando RH active una encuesta y te invite, aparecerá aquí.</EmptyState>

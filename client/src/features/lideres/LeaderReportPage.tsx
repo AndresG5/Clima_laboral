@@ -62,9 +62,9 @@ export function LeaderReportPage({ own = false }: { own?: boolean }) {
       <PageHeader title={own ? 'Mi reporte 360' : `Reporte 360: ${r.leader.name}`} actions={select}>
         {r.leader.areaName}. {r.survey.title}. {!own && <Link to="/lideres" className="text-azul-plano underline underline-offset-4">Volver a líderes</Link>}
       </PageHeader>
-      <div className="grid gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <Panel title="Quién respondió">
-          <ul className="grid gap-4 sm:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {r.groups.map((g) => (
               <li key={g.relation}>
                 <p className="text-[13px] leading-5 text-acero">{g.label}</p>

@@ -106,7 +106,7 @@ export function DashboardPage() {
       <div className="mb-6 flex flex-wrap items-end gap-4">
         <Field label="Área">
           {(id) => (
-            <Select id={id} value={areaFilter} onChange={(e) => setAreaFilter(e.target.value)} className="!w-auto min-w-48">
+            <Select id={id} value={areaFilter} onChange={(e) => setAreaFilter(e.target.value)} className="w-full min-w-0 sm:!w-auto sm:min-w-48">
               <option value="">Todas las áreas</option>
               {heat.data?.rows.map((r) => <option key={r.areaId} value={r.areaId}>{r.areaName}</option>)}
             </Select>
@@ -114,7 +114,7 @@ export function DashboardPage() {
         </Field>
         <Field label="Dimensión">
           {(id) => (
-            <Select id={id} value={dimFilter} onChange={(e) => setDimFilter(e.target.value)} className="!w-auto min-w-48">
+            <Select id={id} value={dimFilter} onChange={(e) => setDimFilter(e.target.value)} className="w-full min-w-0 sm:!w-auto sm:min-w-48">
               <option value="">Todas las dimensiones</option>
               {heat.data?.dimensions.map((d) => <option key={d.dimension} value={d.dimension}>{d.label}</option>)}
             </Select>

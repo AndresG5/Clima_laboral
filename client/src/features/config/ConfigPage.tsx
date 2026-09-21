@@ -45,9 +45,9 @@ export function ConfigPage() {
       <PageHeader title="Configuración del modelo de riesgo">
         El índice es ponderado y explicable, no aprendizaje automático. Los pesos son supuestos de trabajo y no están calibrados con datos reales.
       </PageHeader>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Panel title="Pesos del índice" actions={<span className={`tabular font-semibold ${weightsOk ? 'text-verde-texto' : 'text-rojo-texto'}`}>Suman {Number.isFinite(sum) ? sum : 0} %</span>}>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {ORDER.map((k) => (
               <Field key={k} label={cfg.labels[k]} error={weights[k] !== undefined && (!Number.isFinite(w[k]) || w[k] < 0) ? 'Escribe un número de 0 o más.' : undefined}>
                 {(id, d) => <Input id={id} type="number" inputMode="decimal" min={0} max={100} step="any" value={weights[k] ?? ''} aria-describedby={d} onChange={(e) => setWeights((s) => ({ ...s, [k]: e.target.value }))} className="tabular" />}
@@ -58,7 +58,7 @@ export function ConfigPage() {
         </Panel>
 
         <Panel title="Umbrales de nivel">
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {([['medio', 'Observación desde'], ['alto', 'Alto desde'], ['critico', 'Crítico desde']] as const).map(([k, label]) => (
               <Field key={k} label={label}>
                 {(id) => <Input id={id} type="number" min={1} max={100} step="any" value={levels[k] ?? ''} onChange={(e) => setLevels((s) => ({ ...s, [k]: e.target.value }))} className="tabular" />}

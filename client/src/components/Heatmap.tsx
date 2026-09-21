@@ -46,7 +46,7 @@ export function Heatmap({ data, selectedAreaId, dimensionFilter, onSelectArea }:
   let i = 0;
   return (
     <div>
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <table className="tabular w-full min-w-[720px] border-separate border-spacing-1 text-sm">
           <caption className="sr-only">Porcentaje de respuestas favorables por área y dimensión, con cambio contra la encuesta anterior</caption>
           <thead>

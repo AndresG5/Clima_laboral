@@ -19,9 +19,9 @@ export function SurveySelect({ type, value, onChange, label = 'Encuesta', onlyCl
   const { data } = useSurveys(type, onlyClosed);
   if (!data || data.length === 0) return null;
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center sm:gap-2">
       <label htmlFor={`sel-${type}`} className="text-acero">{label}</label>
-      <Select id={`sel-${type}`} value={value ?? data[0].id} onChange={(e) => onChange(e.target.value)} className="!w-auto min-w-64">
+      <Select id={`sel-${type}`} value={value ?? data[0].id} onChange={(e) => onChange(e.target.value)} className="w-full min-w-0 sm:!w-auto sm:min-w-64">
         {data.map((s) => <option key={s.id} value={s.id}>{s.title} ({SURVEY_STATUS_LABELS[s.status].toLowerCase()})</option>)}
       </Select>
     </div>

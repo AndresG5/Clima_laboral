@@ -21,7 +21,7 @@ export function TrendChart({ data }: { data: TrendAll }) {
     <div>
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <label htmlFor="trend-highlight" className="text-[13px] text-acero">Resaltar</label>
-        <Select id="trend-highlight" value={highlight} onChange={(e) => setHighlight(e.target.value)} className="!w-auto min-w-48">
+        <Select id="trend-highlight" value={highlight} onChange={(e) => setHighlight(e.target.value)} className="w-full min-w-0 sm:!w-auto sm:min-w-48">
           {options.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
         </Select>
       </div>
